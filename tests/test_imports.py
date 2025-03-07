@@ -15,19 +15,30 @@ def test_import_paths():
     for p in sys.path:
         print(f"  - {p}")
 
-    # Try importing from different modules
-    try:
-        # Core modules
-        import src
-        from src.utils import helpers, validators
-        from src.preprocessing import processor
+    success = True
 
-        # Print success message
-        print("\nSuccessfully imported core modules")
-        assert True
-    except ImportError as e:
-        print(f"\nImport error: {e}")
-        assert False, f"Import failed: {e}"
+    # Try importing modules one by one
+    modules_to_test = [
+        "src",
+        "src.utils.config",
+        "src.utils.helpers",
+        "src.utils.validators",
+        "src.utils.logger",
+        "src.preprocessing.processor",
+        "src.preprocessing.normalizer",
+        "src.preprocessing.deduplicator",
+        "src.preprocessing.extractor",
+    ]
+
+    for module in modules_to_test:
+        try:
+            __import__(module)
+            print(f"Successfully imported: {module}")
+        except ImportError as e:
+            print(f"Failed to import: {module} - {e}")
+            success = False
+
+    assert success, "One or more imports failed"
 
 
 def test_module_structure():
@@ -38,6 +49,10 @@ def test_module_structure():
     # Check essential directories and files
     paths_to_check = [
         "src/utils/__init__.py",
+        "src/utils/config.py",
+        "src/utils/helpers.py",
+        "src/utils/logger.py",
+        "src/utils/validators.py",
         "src/preprocessing/__init__.py",
         "src/analysis/__init__.py",
         "src/visualization/__init__.py",

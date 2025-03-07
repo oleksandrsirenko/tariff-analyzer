@@ -341,9 +341,7 @@ class TariffDashboard:
             except Exception as e:
                 logger.error(f"Error saving dashboard: {e}")
 
-        return html.close()
-
-        return img
+        return html
 
     def plot_tariff_rate_histogram(self, figsize: Tuple[int, int] = (10, 6)) -> str:
         """
@@ -411,29 +409,38 @@ class TariffDashboard:
         for _, row in self.df.dropna(
             subset=["affected_industries", "main_tariff_rate"]
         ).iterrows():
-            industries = (
-                [ind.strip() for ind in row["affected_industries"].split(";")]
-                if isinstance(row["affected_industries"], str)
-                else row["affected_industries"]
-            )
+            try:
+                industries = []
+                if isinstance(row["affected_industries"], str):
+                    industries = [
+                        ind.strip()
+                        for ind in row["affected_industries"].split(";")
+                        if ind.strip()
+                    ]
+                elif isinstance(row["affected_industries"], list):
+                    industries = row["affected_industries"]
 
-            for industry in industries:
-                if not industry:
-                    continue
+                for industry in industries:
+                    if not industry:
+                        continue
 
-                if industry not in industry_tariffs:
-                    industry_tariffs[industry] = {"rates": [], "count": 0}
+                    if industry not in industry_tariffs:
+                        industry_tariffs[industry] = {"rates": [], "count": 0}
 
-                industry_tariffs[industry]["rates"].append(row["main_tariff_rate"])
-                industry_tariffs[industry]["count"] += 1
+                    industry_tariffs[industry]["rates"].append(row["main_tariff_rate"])
+                    industry_tariffs[industry]["count"] += 1
+            except Exception as e:
+                continue
+
+        # If no industry data, return empty
+        if not industry_tariffs:
+            return ""
 
         # Calculate averages
         for industry in industry_tariffs:
+            rates = industry_tariffs[industry]["rates"]
             industry_tariffs[industry]["avg_rate"] = (
-                sum(industry_tariffs[industry]["rates"])
-                / len(industry_tariffs[industry]["rates"])
-                if industry_tariffs[industry]["rates"]
-                else 0
+                sum(rates) / len(rates) if rates else 0
             )
 
         # Prepare data for plotting
@@ -454,30 +461,37 @@ class TariffDashboard:
             avg_rates = avg_rates[:10]
             counts = counts[:10]
 
-        plt.figure(figsize=figsize)
+        # Handle empty data case
+        if not industries:
+            return ""
+
+        # Create figure with a specific size
+        fig, ax = plt.subplots(figsize=figsize)
 
         # Create a color map based on count
-        colors = plt.cm.viridis([count / max(counts) for count in counts])
+        max_count = max(counts) if counts else 1
+        colors = plt.cm.viridis([count / max_count for count in counts])
 
         # Plot bars with color mapping
-        bars = plt.barh(industries, avg_rates, color=colors)
+        bars = ax.barh(industries, avg_rates, color=colors)
 
-        # Add a colorbar
-        sm = plt.cm.ScalarMappable(
-            cmap=plt.cm.viridis, norm=plt.Normalize(min(counts), max(counts))
-        )
-        sm._A = []  # Hack to make it work
-        cbar = plt.colorbar(sm)
-        cbar.set_label("Number of Tariff Events")
+        # Add a colorbar with explicit axis reference
+        if counts:
+            sm = plt.cm.ScalarMappable(
+                cmap=plt.cm.viridis, norm=plt.Normalize(min(counts), max(counts))
+            )
+            sm._A = []  # Hack to make it work
+            fig.colorbar(sm, ax=ax)  # Pass the axes explicitly
 
-        plt.title("Average Tariff Rate by Industry", fontsize=15)
-        plt.xlabel("Average Tariff Rate (%)", fontsize=12)
-        plt.ylabel("Industry", fontsize=12)
+        ax.set_title("Average Tariff Rate by Industry", fontsize=15)
+        ax.set_xlabel("Average Tariff Rate (%)", fontsize=12)
+        ax.set_ylabel("Industry", fontsize=12)
+
         plt.tight_layout()
 
         # Convert plot to base64 string
-        img = self._fig_to_base64(plt.gcf())
-        plt.close()
+        img = self._fig_to_base64(fig)
+        plt.close(fig)
 
         return img
 

@@ -1,0 +1,76 @@
+{
+    "message": "Success",
+    "count": 1,
+    "events": [
+        {
+            "id": "T1m4cJUBvyT_ytpRAWd2",
+            "event_type": "tariffs_v2",
+            "global_event_type": "TradePolicy",
+            "associated_article_ids": [
+                "8372991e37da2353fe9acc50992a14b7"
+            ],
+            "extraction_date": "2025-03-07 14:22:15",
+            "event_date": null,
+            "company_name": null,
+            "tariffs_v2": {
+                "imposing_country_name": "United States",
+                "imposing_country_code": "US",
+                "targeted_country_names": [
+                    "China",
+                    "South Korea"
+                ],
+                "targeted_country_codes": [
+                    "CN",
+                    "KR"
+                ],
+                "measure_type": "tariff increase",
+                "trigger_event": "Alleged intellectual property theft and unfair trade practices by Chinese manufacturers",
+                "affected_industries": [
+                    "Information Technology",
+                    "Consumer Discretionary",
+                    "Materials"
+                ],
+                "affected_products": [
+                    "semiconductors",
+                    "solar panels",
+                    "lithium batteries",
+                    "electric vehicles"
+                ],
+                "hs_product_categories": [
+                    "XVI: Machinery and mechanical appliances",
+                    "XVII: Vehicles, aircraft, vessels",
+                    "XV: Base metals and articles of base metal"
+                ],
+                "tariff_rates": [
+                    "35% on semiconductors",
+                    "25% on solar panels",
+                    "40% on lithium batteries",
+                    "30% on electric vehicles"
+                ],
+                "main_tariff_rate": 35,
+                "previous_tariff_rate": "25% on semiconductors, 15% on solar panels, 20% on lithium batteries, 10% on electric vehicles",
+                "announcement_date": "2025/02/15",
+                "implementation_date": "2025/04/01",
+                "expiration_date": "2026/04/01",
+                "estimated_trade_value": "$85 billion",
+                "legal_basis": "Section 301 of the Trade Act of 1974",
+                "policy_objective": "Protect domestic technology sector and address intellectual property theft",
+                "exemptions": [
+                    "Products for essential medical equipment",
+                    "Components for US defense contractors",
+                    "Parts imported for completion of products to be exported"
+                ],
+                "relevance_score": "High",
+                "summary": "The United States has announced a significant increase in tariffs on technology products from China and South Korea, focusing on semiconductors, solar panels, lithium batteries, and electric vehicles. The tariff rates will increase from their current levels to between 25% and 40%, impacting an estimated $85 billion in trade. The measures, based on Section 301 of the Trade Act of 1974, are set to take effect on April 1, 2025, and will remain in place for one year. The administration cited intellectual property theft and unfair trade practices as the primary justifications for these actions. Certain exemptions apply, including components used in medical equipment and defense applications."
+            },
+            "articles": [
+                {
+                    "link": "https://www.techtrade.com/news/us-imposes-new-tariffs-on-asian-tech-products/8372991",
+                    "id": "8372991e37da2353fe9acc50992a14b7",
+                    "media": "https://www.techtrade.com/uploads/news/2025/3/tech_tariffs_header.webp",
+                    "title": "US Imposes New Tariffs on Asian Tech Products, Targeting Semiconductors and EVs"
+                }
+            ]
+        }
+    ]
+}

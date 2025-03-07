@@ -6,3 +6,4 @@ networkx>=2.6.0
 pyyaml>=6.0
 pytest>=6.2.0
 tqdm>=4.61.0
+cartopy>=0.20.0  # For geographic visualizations with map projections

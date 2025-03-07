@@ -51,19 +51,47 @@ class CountryNormalizer:
 
             # Build mappings
             for _, row in df.iterrows():
-                code = row["Alpha-2 code"].strip()
-                name = row["Country"].strip()
+                try:
+                    # Handle possible string or non-string values
+                    if pd.notna(row["Alpha-2 code"]) and pd.notna(row["Country"]):
+                        code = (
+                            str(row["Alpha-2 code"]).strip().strip("\"'")
+                        )  # Remove quotes and whitespace
+                        name = str(row["Country"]).strip().strip("\"'")
 
-                if code and name:
-                    self.code_to_name[code] = name
-                    self.name_to_code[name.lower()] = code
+                        if code and name:
+                            self.code_to_name[code] = name
+                            self.name_to_code[name.lower()] = code
 
-                    # Add variations for common countries
-                    self._add_country_variations(name.lower(), code)
+                            # Add variations for common countries
+                            self._add_country_variations(name.lower(), code)
+                except Exception as e:
+                    logger.debug(f"Error processing country row: {e}")
+                    continue
 
+            # Add core mappings to ensure important countries are available
+            self._ensure_core_mappings()
+
+            logger.info(f"Loaded {len(self.code_to_name)} country mappings")
         except Exception as e:
             logger.error(f"Error loading country mappings: {e}")
             self._load_default_mappings()
+
+    def _ensure_core_mappings(self) -> None:
+        """Ensure core country mappings are present."""
+        core_mappings = [
+            ("US", "United States"),
+            ("CN", "China"),
+            ("KR", "South Korea"),
+            ("GB", "United Kingdom"),
+            ("EU", "European Union"),
+        ]
+
+        for code, name in core_mappings:
+            if code not in self.code_to_name:
+                self.code_to_name[code] = name
+                self.name_to_code[name.lower()] = code
+                self._add_country_variations(name.lower(), code)
 
     def _load_default_mappings(self) -> None:
         """Load default country mappings for common countries."""

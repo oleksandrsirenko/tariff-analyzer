@@ -558,6 +558,7 @@ class TariffImpactAnalyzer:
 
         return list(unique_values)
 
+    # Update the _get_list_values method in src/analysis/impact.py
     def _get_list_values(self, row: pd.Series, column_name: str) -> List[str]:
         """
         Get list values from a DataFrame row.
@@ -569,7 +570,8 @@ class TariffImpactAnalyzer:
         Returns:
             List of values
         """
-        if column_name not in row or pd.isna(row[column_name]):
+        # Fix the condition to check if column exists and is not null
+        if column_name not in row.index or pd.isna(row[column_name]):
             return []
 
         value = row[column_name]

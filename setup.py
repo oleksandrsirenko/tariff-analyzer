@@ -15,6 +15,7 @@ setup(
         "networkx>=2.6.0",
         "pyyaml>=6.0",
         "tqdm>=4.61.0",
+        "cartopy>=0.20.0",  # For geographic visualizations with map projections
     ],
-    python_requires=">=3.8",
+    python_requires=">=3.11",  # Supporting 3.8+ for compatibility, though 3.11+ is recommended
 )

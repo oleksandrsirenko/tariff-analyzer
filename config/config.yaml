@@ -1,0 +1,26 @@
+# Configuration for the tariff analyzer
+
+# Preprocessing configuration
+preprocessing:
+  batch_size: 1000
+  deduplication: true
+  standardize_countries: true
+  standardize_dates: true
+  extract_tariff_rates: true
+
+# Analysis configuration
+analysis:
+  trade_relationship_threshold: 3
+  time_series_min_events: 5
+  outlier_threshold: 3.0
+
+# Visualization configuration
+visualization:
+  map_projection: "mercator"
+  color_palette: "viridis"
+  network_layout: "spring"
+
+# Logging configuration
+logging:
+  directory: "logs"
+  level: "INFO"

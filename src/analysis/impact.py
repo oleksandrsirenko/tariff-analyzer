@@ -569,11 +569,18 @@ class TariffImpactAnalyzer:
         Returns:
             List of values
         """
-        if column_name not in row or pd.isna(row[column_name]):
+        # First check if column exists
+        if column_name not in row.index:
             return []
 
+        # Get the value
         value = row[column_name]
 
+        # Check if value is None or empty
+        if value is None:
+            return []
+
+        # Special handling for different types
         if isinstance(value, list):
             return value
         elif isinstance(value, str):
@@ -582,5 +589,14 @@ class TariffImpactAnalyzer:
                 return [v.strip() for v in value.split(";") if v.strip()]
             except:
                 return []
+        elif hasattr(value, "tolist"):  # For numpy arrays and pandas Series
+            try:
+                return value.tolist()
+            except:
+                return []
         else:
-            return []
+            # For other types, try to convert to string and split
+            try:
+                return [str(value)]
+            except:
+                return []

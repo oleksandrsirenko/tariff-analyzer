@@ -10,6 +10,9 @@ from typing import Dict, List, Any, Optional, Union, Tuple
 import io
 import base64
 from datetime import datetime
+import sys
+
+sys.path.append("..")
 
 from ..utils import logger, config
 

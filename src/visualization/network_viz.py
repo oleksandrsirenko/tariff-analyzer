@@ -8,6 +8,9 @@ import networkx as nx
 from typing import Dict, List, Any, Optional, Union, Tuple
 import io
 import base64
+import sys
+
+sys.path.append("..")
 
 from ..utils import logger, config
 

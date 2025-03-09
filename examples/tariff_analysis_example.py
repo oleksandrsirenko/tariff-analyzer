@@ -9,6 +9,7 @@ import os
 import json
 import sys
 from pathlib import Path
+import numpy as np
 
 # Add parent directory to path to make imports work when running directly
 sys.path.append(str(Path(__file__).parent.parent))
@@ -73,10 +74,20 @@ def main():
     stats = TariffStatistics(processed_data)
     summary = stats.get_summary_statistics()
 
+    # Convert numbers to make JSON serializable
+    def convert_numpy_types(obj):
+        """Convert numpy types to Python native types for JSON serialization."""
+        if isinstance(obj, np.integer):
+            return int(obj)
+        elif isinstance(obj, np.floating):
+            return float(obj)
+        elif isinstance(obj, np.ndarray):
+            return obj.tolist()
+        return obj
+
     # Save statistics
     with open(stats_json, "w") as f:
-        json.dump(summary, f, indent=2)
-    print(f"Saved statistics to {stats_json}")
+        json.dump(summary, f, indent=2, default=convert_numpy_types)
 
     # Impact analysis
     print("- Analyzing economic impact...")

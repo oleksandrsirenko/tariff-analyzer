@@ -173,3 +173,4 @@ pyrightconfig.json
 # Data
 /data/raw
 /data/processed
+/output
